@@ -1,8 +1,10 @@
-package cc.rest.model;
+package cc.common.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 /**
  * @author Maxim Neverov
@@ -10,10 +12,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Category {
+public class Notification {
 
-    private String code;
-    private String title;
-    private String superCategoryCode;
-    
+    private String book;
+    private List<CategoryPath> categoryPaths;
+
 }

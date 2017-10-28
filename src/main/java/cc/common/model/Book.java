@@ -1,4 +1,4 @@
-package cc.rest.model;
+package cc.common.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,9 +12,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Newsletter {
+public class Book {
 
-    private String recipient;
-    private List<Notification> notifications;
-    
+    private String title;
+    private List<String> categoryCodes;
+
 }

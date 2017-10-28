@@ -1,4 +1,4 @@
-package cc.rest.model;
+package cc.common.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

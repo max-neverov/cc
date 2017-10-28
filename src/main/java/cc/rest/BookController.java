@@ -1,6 +1,6 @@
 package cc.rest;
 
-import cc.rest.model.Book;
+import cc.common.model.Book;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;

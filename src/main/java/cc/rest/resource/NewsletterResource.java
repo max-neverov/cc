@@ -1,6 +1,6 @@
 package cc.rest.resource;
 
-import cc.rest.model.Newsletter;
+import cc.common.model.Newsletter;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
