@@ -25,11 +25,14 @@ repositories {
 }
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-web")
-    compile("org.springframework.boot:spring-boot-starter-actuator")
+    compile("org.springframework.boot:spring-boot-starter-web:1.5.8.RELEASE")
+    compile("org.springframework.boot:spring-boot-starter-actuator:1.5.8.RELEASE")
+    compile("org.springframework.boot:spring-boot-starter-jdbc:1.5.8.RELEASE")
     compile("org.projectlombok:lombok:1.16.18")
     compile("ch.qos.logback:logback-classic:1.2.3")
     compile("javax.inject:javax.inject:1")
+    compile("org.liquibase:liquibase-core:3.5.3")
+    runtime("com.h2database:h2:1.4.196")
 
     // mandatory dependencies for using Spock
     compile("org.codehaus.groovy:groovy-all:2.4.10")

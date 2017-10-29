@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: nmax
+      changes:
+        - createTable:
+            tableName: category
+            columns:
+              - column:
+                  name: code
+                  type: varchar(20)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: super_category_code
+                  type: varchar(20)
+                  constraints:
+                    nullable: true
