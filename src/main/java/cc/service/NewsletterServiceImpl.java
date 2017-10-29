@@ -46,6 +46,7 @@ public class NewsletterServiceImpl implements NewsletterService {
 
 
     /**
+     * Visible for testing.
      * Simple DFS algorithm with tracking already processed nodes.
      *
      * @param root Tree root

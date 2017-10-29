@@ -4,12 +4,10 @@ import cc.common.model.CategoryNode
 import cc.common.model.CategoryPath
 import cc.persistence.book.BookRepository
 import cc.persistence.subscriber.SubscriberRepository
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
-import org.mockito.Spy
+import org.mockito.*
 import spock.lang.Specification
+
+import static org.mockito.ArgumentMatchers.eq
 
 /**
  * @author Maxim Neverov
@@ -36,7 +34,7 @@ class NewsletterServiceTest extends Specification {
         def root = getRootNode()
 
         when:
-        Mockito.when(service.getAllPathsStartedBy(root)).thenCallRealMethod()
+        Mockito.doCallRealMethod().when(service).getAllPathsStartedBy(eq(root))
         def paths = service.getAllPathsStartedBy(root)
 
         then:
