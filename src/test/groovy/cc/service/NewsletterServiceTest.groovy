@@ -8,8 +8,6 @@ import org.mockito.*
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import static org.mockito.ArgumentMatchers.eq
-
 /**
  * @author Maxim Neverov
  */
