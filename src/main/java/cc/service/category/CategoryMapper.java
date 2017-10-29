@@ -15,7 +15,17 @@ public class CategoryMapper {
         result.setCode(category.getCode());
         result.setTitle(category.getTitle());
         result.setSuperCategoryCode(category.getSuperCategoryCode());
-        
+
         return result;
     }
+
+    public Category mapToCategory(CategoryDto categoryDto) {
+        Category result = new Category();
+        result.setCode(categoryDto.getCode());
+        result.setTitle(categoryDto.getTitle());
+        result.setSuperCategoryCode(categoryDto.getSuperCategoryCode());
+
+        return result;
+    }
+
 }

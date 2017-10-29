@@ -5,13 +5,15 @@ import cc.persistence.category.CategoryRepository;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Maxim Neverov
  */
 @Service
 public class CategoryServiceImpl implements CategoryService {
-    
+
     private final CategoryRepository repository;
     private final CategoryMapper mapper;
 
@@ -25,5 +27,12 @@ public class CategoryServiceImpl implements CategoryService {
     public void create(Category category) {
         repository.create(mapper.mapToDto(category));
     }
-    
+
+    @Override
+    public List<Category> getAllCategories() {
+        return repository.getAllCategories().stream()
+                .map(mapper::mapToCategory)
+                .collect(Collectors.toList());
+    }
+
 }
