@@ -15,7 +15,9 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * @author Maxim Neverov
@@ -44,16 +46,47 @@ public class NewsletterServiceImpl implements NewsletterService {
         return Collections.emptyList();
     }
 
+    /**
+     * Visible for testing.
+     * Simple BFS algorithm to find all categories paths in a given tree
+     *
+     * @param desiredCategories Subscriber's desired categories
+     * @param root A category tree to traverse
+     * @return List of paths for desired categories if found, empty list otherwise
+     */
+    List<CategoryPath> getPathsForCategories(List<String> desiredCategories, CategoryNode root) {
+        final List<CategoryPath> result = new ArrayList<>();
+        final Queue<CategoryNode> queue = new LinkedList<>();
+
+        // counter to stop tree traversing when all desired categories are found
+        int categoriesNumberToFind = desiredCategories.size();
+        do {
+            String currentCategoryCode = root.getCategoryCode();
+
+            if (desiredCategories.contains(currentCategoryCode)) {
+                result.addAll(getAllPathsStartedBy(root));
+                categoriesNumberToFind -= 1;
+            } else {
+                queue.addAll(root.getChildCategories());
+            }
+
+            if (!queue.isEmpty()) {
+                root = queue.poll();
+            }
+        } while (!queue.isEmpty() && categoriesNumberToFind > 0);
+
+        return result;
+    }
 
     /**
      * Visible for testing.
      * Simple DFS algorithm with tracking already processed nodes.
      *
      * @param root Tree root
-     * @return List of categories paths for given tree
+     * @return List of categories paths for a given tree
      */
     List<CategoryPath> getAllPathsStartedBy(CategoryNode root) {
-        List<CategoryPath> result = new ArrayList<>();
+        final List<CategoryPath> result = new ArrayList<>();
         final Deque<PathHolder> stack = new ArrayDeque<>();
         List<String> prefix = null;
         while (root != null || !stack.isEmpty()) {
@@ -62,9 +95,11 @@ public class NewsletterServiceImpl implements NewsletterService {
                 root = pathHolder.getNode();
                 prefix = pathHolder.getPathPrefix();
             }
+
             if (root == null) {
                 break;
             }
+
             // create a separate path for each node from stack
             CategoryPath path = new CategoryPath(prefix);
             while (root != null) {

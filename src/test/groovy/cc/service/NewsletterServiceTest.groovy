@@ -31,7 +31,7 @@ class NewsletterServiceTest extends Specification {
 
     def "check category paths fill correctly"() {
         setup:
-        def root = getRootNode()
+        def root = getCategoryTreeFrom1To11()
 
         when:
         Mockito.doCallRealMethod().when(service).getAllPathsStartedBy(eq(root))
@@ -48,6 +48,27 @@ class NewsletterServiceTest extends Specification {
 
     }
 
+    def "check desired categories are found in existing"() {
+        setup:
+        def root = getCategoryTreeFrom1To11()
+        def desiredCats = ["5", "6", "not existing category"]
+
+        when:
+        Mockito.doCallRealMethod().when(service).getPathsForCategories(eq(desiredCats), eq(root))
+        def paths = service.getPathsForCategories(desiredCats, root)
+
+        then:
+        paths.size() == 4
+        paths.contains(new CategoryPath(["5","9"]))
+        paths.contains(new CategoryPath(["5","10"]))
+        paths.contains(new CategoryPath(["5","11"]))
+        paths.contains(new CategoryPath(["6"]))
+    }
+
+    private static List<CategoryNode> getListOfCategoryTrees() {
+        [getCategoryTreeFrom1To11(), getCategoryTreeFrom20To25()]
+    }
+
     /**
      * @return category tree as it depicted below
      *
@@ -60,36 +81,64 @@ class NewsletterServiceTest extends Specification {
      *       7    8  9  10  11
      *
      */
-    private static CategoryNode getRootNode() {
-        CategoryNode nine = new CategoryNode("9", "9")
-        CategoryNode ten = new CategoryNode("10", "10")
-        CategoryNode eleven = new CategoryNode("11", "11")
+    private static CategoryNode getCategoryTreeFrom1To11() {
+        CategoryNode _9 = new CategoryNode("9", "9")
+        CategoryNode _10 = new CategoryNode("10", "10")
+        CategoryNode _11 = new CategoryNode("11", "11")
 
         CategoryNode five = new CategoryNode("5", "5")
-        five.addChildCategoryNode(nine)
-        five.addChildCategoryNode(ten)
-        five.addChildCategoryNode(eleven)
+        five.addChildCategoryNode(_9)
+        five.addChildCategoryNode(_10)
+        five.addChildCategoryNode(_11)
 
-        CategoryNode eight = new CategoryNode("8", "8")
-        CategoryNode seven = new CategoryNode("7", "7")
+        CategoryNode _8 = new CategoryNode("8", "8")
+        CategoryNode _7 = new CategoryNode("7", "7")
 
-        CategoryNode four = new CategoryNode("4", "4")
-        four.addChildCategoryNode(seven)
-        four.addChildCategoryNode(eight)
+        CategoryNode _4 = new CategoryNode("4", "4")
+        _4.addChildCategoryNode(_7)
+        _4.addChildCategoryNode(_8)
 
-        CategoryNode six = new CategoryNode("6", "6")
-        CategoryNode three = new CategoryNode("3", "3")
-        three.addChildCategoryNode(six)
+        CategoryNode _6 = new CategoryNode("6", "6")
+        CategoryNode _3 = new CategoryNode("3", "3")
+        _3.addChildCategoryNode(_6)
 
-        CategoryNode two = new CategoryNode("2", "2")
-        two.addChildCategoryNode(four)
-        two.addChildCategoryNode(five)
+        CategoryNode _2 = new CategoryNode("2", "2")
+        _2.addChildCategoryNode(_4)
+        _2.addChildCategoryNode(five)
 
-        CategoryNode one = new CategoryNode("1", "1")
-        one.addChildCategoryNode(two)
-        one.addChildCategoryNode(three)
+        CategoryNode root = new CategoryNode("1", "1")
+        root.addChildCategoryNode(_2)
+        root.addChildCategoryNode(_3)
 
-        one
+        root
+    }
+
+    /**
+     * @return category tree as it depicted below
+     *
+     *                20
+     *               /   \
+     *             21    22
+     *           /   \    \
+     *         23    24   25
+     *
+     */
+    private static CategoryNode getCategoryTreeFrom20To25() {
+        CategoryNode _23 = new CategoryNode("23", "23")
+        CategoryNode _24 = new CategoryNode("24", "24")
+        CategoryNode _21 = new CategoryNode("21", "21")
+        _21.addChildCategoryNode(_23)
+        _21.addChildCategoryNode(_24)
+
+        CategoryNode _22 = new CategoryNode("22", "22")
+        CategoryNode _25 = new CategoryNode("25", "25")
+        _22.addChildCategoryNode(_25)
+
+        CategoryNode root = new CategoryNode("20", "20")
+        root.addChildCategoryNode(_21)
+        root.addChildCategoryNode(_22)
+
+        root
     }
 
 }
