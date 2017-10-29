@@ -1,19 +1,26 @@
 package cc.common.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Value;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Maxim Neverov
  */
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Value
 public class CategoryPath {
 
-    private List<String> path;
+    private final List<String> path = new ArrayList<>();
+
+    public CategoryPath(List<String> path) {
+        if (path != null) {
+            this.path.addAll(path);
+        }
+    }
+
+    public void addCategory(String category) {
+        path.add(category);
+    }
 
 }
