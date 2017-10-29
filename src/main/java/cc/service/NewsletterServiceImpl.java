@@ -56,6 +56,9 @@ public class NewsletterServiceImpl implements NewsletterService {
      */
     List<CategoryPath> getPathsForCategories(List<String> desiredCategories, CategoryNode root) {
         final List<CategoryPath> result = new ArrayList<>();
+        if (desiredCategories == null || desiredCategories.isEmpty() || root == null) {
+            return result;
+        }
         final Queue<CategoryNode> queue = new LinkedList<>();
 
         // counter to stop tree traversing when all desired categories are found

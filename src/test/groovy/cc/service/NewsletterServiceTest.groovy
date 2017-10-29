@@ -6,6 +6,7 @@ import cc.persistence.book.BookRepository
 import cc.persistence.subscriber.SubscriberRepository
 import org.mockito.*
 import spock.lang.Specification
+import spock.lang.Unroll
 
 import static org.mockito.ArgumentMatchers.eq
 
@@ -34,7 +35,6 @@ class NewsletterServiceTest extends Specification {
         def root = getCategoryTreeFrom1To11()
 
         when:
-        Mockito.doCallRealMethod().when(service).getAllPathsStartedBy(eq(root))
         def paths = service.getAllPathsStartedBy(root)
 
         then:
@@ -45,16 +45,37 @@ class NewsletterServiceTest extends Specification {
         paths.contains(new CategoryPath(["1","2","5","10"]))
         paths.contains(new CategoryPath(["1","2","5","11"]))
         paths.contains(new CategoryPath(["1","3","6"]))
-
     }
 
-    def "check desired categories are found in existing"() {
+    def "empty node category's path should return empty list"() {
+        setup:
+        CategoryNode root = null
+
+        when:
+        def paths = service.getAllPathsStartedBy(root)
+
+        then:
+        paths.isEmpty()
+    }
+
+    def "single node category's path should contain one element"() {
+        setup:
+        def root = new CategoryNode("1", "1")
+
+        when:
+        def paths = service.getAllPathsStartedBy(root)
+
+        then:
+        paths.size() == 1
+        paths.contains(new CategoryPath(["1"]))
+    }
+
+    def "desired categories should be found in existing categories"() {
         setup:
         def root = getCategoryTreeFrom1To11()
         def desiredCats = ["5", "6", "not existing category"]
 
         when:
-        Mockito.doCallRealMethod().when(service).getPathsForCategories(eq(desiredCats), eq(root))
         def paths = service.getPathsForCategories(desiredCats, root)
 
         then:
@@ -63,6 +84,48 @@ class NewsletterServiceTest extends Specification {
         paths.contains(new CategoryPath(["5","10"]))
         paths.contains(new CategoryPath(["5","11"]))
         paths.contains(new CategoryPath(["6"]))
+    }
+
+    def "null root node should return empty list"() {
+        setup:
+        CategoryNode root = null
+        def desiredCats = ["5", "6", "not existing category"]
+
+        when:
+        def paths = service.getPathsForCategories(desiredCats, root)
+
+        then:
+        paths.isEmpty()
+    }
+
+    def "single node categories path should contain one element"() {
+        setup:
+        def root = new CategoryNode("1", "1")
+        def desiredCats = ["1", "6", "not existing category"]
+
+        when:
+        def paths = service.getPathsForCategories(desiredCats, root)
+
+        then:
+        paths.size() == 1
+        paths.contains(new CategoryPath(["1"]))
+    }
+
+    @Unroll
+    def "empty desired categories should return empty list"() {
+        setup:
+        def root = getCategoryTreeFrom1To11()
+
+        when:
+        def paths = service.getPathsForCategories(desiredCats, root)
+
+        then:
+        paths.size() == resultSize
+
+        where:
+        desiredCats | resultSize
+        []          |  0
+        null        |  0
     }
 
     private static List<CategoryNode> getListOfCategoryTrees() {
