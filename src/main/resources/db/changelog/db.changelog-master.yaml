@@ -47,3 +47,7 @@ databaseChangeLog:
                     foreignKeyName: fk_book_category
                     references: category(code)
                     nullable: false
+        - addUniqueConstraint:
+            columnNames: title, category_code
+            constraintName: uq_title_category
+            tableName: book
