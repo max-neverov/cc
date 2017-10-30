@@ -12,7 +12,7 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
-                    primaryKeyName: category_code_pk
+                    primaryKeyName: pk_category_code
               - column:
                   name: title
                   type: varchar(255)
@@ -34,7 +34,7 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
-                    primaryKeyName: book_id_pk
+                    primaryKeyName: pk_book_id
               - column:
                   name: title
                   type: varchar(255)
@@ -44,4 +44,6 @@ databaseChangeLog:
                   name: category_code
                   type: varchar(20)
                   constraints:
+                    foreignKeyName: fk_book_category
+                    references: category(code)
                     nullable: false
