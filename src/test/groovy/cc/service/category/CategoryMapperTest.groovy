@@ -17,7 +17,7 @@ class CategoryMapperTest extends Specification {
         def dto = new CategoryDto(code, title, superCode)
 
         when:
-        def result = mapper.mapToCategory(dto)
+        def result = mapper.mapToDomain(dto)
 
         then:
         result.getCode() == code

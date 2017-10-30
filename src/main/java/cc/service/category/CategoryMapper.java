@@ -19,7 +19,7 @@ public class CategoryMapper {
         return result;
     }
 
-    public Category mapToCategory(CategoryDto categoryDto) {
+    public Category mapToDomain(CategoryDto categoryDto) {
         Category result = new Category();
         result.setCode(categoryDto.getCode());
         result.setTitle(categoryDto.getTitle());
