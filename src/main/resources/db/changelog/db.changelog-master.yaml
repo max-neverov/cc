@@ -12,6 +12,7 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
+                    primaryKeyName: category_code_pk
               - column:
                   name: title
                   type: varchar(255)
@@ -23,3 +24,25 @@ databaseChangeLog:
                   type: varchar(20)
                   constraints:
                     nullable: true
+        - createTable:
+            tableName: book
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    primaryKeyName: book_id_pk
+              - column:
+                  name: title
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: category_code
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
