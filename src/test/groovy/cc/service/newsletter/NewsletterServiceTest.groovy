@@ -1,9 +1,10 @@
-package cc.service
+package cc.service.newsletter
 
 import cc.common.model.CategoryNode
 import cc.common.model.CategoryPath
 import cc.persistence.book.BookRepository
 import cc.persistence.subscriber.SubscriberRepository
+import cc.service.newsletter.NewsletterServiceImpl
 import org.mockito.*
 import spock.lang.Specification
 import spock.lang.Unroll

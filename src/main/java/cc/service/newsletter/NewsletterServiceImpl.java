@@ -1,4 +1,4 @@
-package cc.service;
+package cc.service.newsletter;
 
 import cc.common.model.CategoryNode;
 import cc.common.model.CategoryPath;
@@ -26,15 +26,12 @@ import java.util.Queue;
 @Service
 public class NewsletterServiceImpl implements NewsletterService {
 
-    private final List<CategoryNode> categoryTrees;
     private final SubscriberRepository subscriberRepository;
     private final BookRepository bookRepository;
 
     @Inject
-    public NewsletterServiceImpl(List<CategoryNode> categoryTrees,
-                                 SubscriberRepository subscriberRepository,
+    public NewsletterServiceImpl(SubscriberRepository subscriberRepository,
                                  BookRepository bookRepository) {
-        this.categoryTrees = categoryTrees;
         this.subscriberRepository = subscriberRepository;
         this.bookRepository = bookRepository;
     }

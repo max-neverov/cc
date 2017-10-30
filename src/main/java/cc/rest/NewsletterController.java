@@ -2,7 +2,7 @@ package cc.rest;
 
 import cc.common.model.Newsletter;
 import cc.rest.resource.NewsletterResource;
-import cc.service.NewsletterService;
+import cc.service.newsletter.NewsletterService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

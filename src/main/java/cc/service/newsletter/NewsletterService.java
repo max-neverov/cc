@@ -1,4 +1,4 @@
-package cc.service;
+package cc.service.newsletter;
 
 import cc.common.model.Newsletter;
 

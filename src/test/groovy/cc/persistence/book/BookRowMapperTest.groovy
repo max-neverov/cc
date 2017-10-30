@@ -1,4 +1,4 @@
-package cc.service.persistence.book
+package cc.persistence.book
 
 import cc.persistence.book.BookRowMapper
 import org.mockito.Mock
