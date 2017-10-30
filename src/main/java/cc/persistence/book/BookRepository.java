@@ -10,5 +10,6 @@ import java.util.List;
 public interface BookRepository {
 
     void create(List<BookDto> books);
+    List<BookDto> getAllBooksBelongToCategory(String category);
 
 }

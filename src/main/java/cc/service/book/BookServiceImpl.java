@@ -5,6 +5,7 @@ import cc.persistence.book.BookRepository;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.util.List;
 
 /**
  * @author Maxim Neverov
@@ -24,6 +25,11 @@ public class BookServiceImpl implements BookService {
     @Override
     public void create(Book book) {
         repository.create(mapper.mapToDto(book));
+    }
+
+    @Override
+    public List<Book> getAllBooksBelongToCategory(String category) {
+        return mapper.mapToDomain(repository.getAllBooksBelongToCategory(category));
     }
 
 }

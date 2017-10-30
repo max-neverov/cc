@@ -26,20 +26,19 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 
     @Override
     public void create(CategoryDto category) {
-        String SQL = "insert into category(code, title, super_category_code)" +
+        String sql = "insert into category(code, title, super_category_code)" +
                     " values (:code, :title, :superCategoryCode)";
-        jdbcTemplate.update( SQL, new BeanPropertySqlParameterSource(category));
+        jdbcTemplate.update(sql, new BeanPropertySqlParameterSource(category));
     }
 
     /**
      * An example how to use lambda as result set mapper.
-     * While looking pretty and concise such mappers are hard to test and in all other
-     * repositories I will use separate mapper classes.
+     * While looking pretty and concise such mappers are hard to test.
      */
     @Override
     public List<CategoryDto> getAllCategories() {
-        String SQL = "select * from category";
-        return jdbcTemplate.query(SQL, (rs, rowNum) ->
+        String sql = "select * from category";
+        return jdbcTemplate.query(sql, (rs, rowNum) ->
                                        new CategoryDto(rs.getString("code"),
                                                        rs.getString("title"),
                                                        rs.getString("super_category_code")));

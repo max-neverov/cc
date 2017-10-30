@@ -19,19 +19,21 @@ import java.util.Map;
 @Repository
 public class BookRepositoryImpl implements BookRepository {
 
-    private DataSource dataSource;
-    private NamedParameterJdbcTemplate jdbcTemplate;
+    private final DataSource dataSource;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final BookRowMapper mapper;
 
     @Inject
-    public BookRepositoryImpl(DataSource dataSource) {
+    public BookRepositoryImpl(DataSource dataSource, BookRowMapper mapper) {
         this.dataSource = dataSource;
         jdbcTemplate = new NamedParameterJdbcTemplate(this.dataSource);
+        this.mapper = mapper;
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public void create(List<BookDto> books) {
-        String sql = "insert into BOOK (title, category_code) values (:title, :categoryCode)";
+        String sql = "insert into book (title, category_code) values (:title, :categoryCode)";
         List<Map<String, Object>> batchValues = new ArrayList<>(books.size());
 
         for (BookDto book : books) {
@@ -41,6 +43,15 @@ public class BookRepositoryImpl implements BookRepository {
         }
 
         jdbcTemplate.batchUpdate(sql, batchValues.toArray(new Map[books.size()]));
+    }
+
+    @Override
+    public List<BookDto> getAllBooksBelongToCategory(String category) {
+        String sql = "select * from book" +
+                    " where category_code = :categoryCode";
+        
+        return jdbcTemplate.query(sql,
+                new MapSqlParameterSource("categoryCode", category), mapper);
     }
 
 }
