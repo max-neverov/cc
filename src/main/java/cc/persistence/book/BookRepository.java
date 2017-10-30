@@ -2,11 +2,13 @@ package cc.persistence.book;
 
 import cc.persistence.dto.BookDto;
 
+import java.util.List;
+
 /**
  * @author Maxim Neverov
  */
 public interface BookRepository {
 
-    void create(BookDto book);
+    void create(List<BookDto> books);
 
 }
