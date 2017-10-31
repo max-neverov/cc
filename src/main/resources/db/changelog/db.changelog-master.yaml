@@ -51,3 +51,30 @@ databaseChangeLog:
             columnNames: title, category_code
             constraintName: uq_title_category
             tableName: book
+        - createTable:
+            tableName: subscriber
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    primaryKeyName: pk_subscriber_id
+              - column:
+                  name: email
+                  type: varchar(60)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: category_code
+                  type: varchar(20)
+                  constraints:
+                    foreignKeyName: fk_subscriber_category
+                    references: category(code)
+                    nullable: false
+        - addUniqueConstraint:
+            columnNames: email, category_code
+            constraintName: uq_email_category
+            tableName: subscriber

@@ -1,14 +1,19 @@
 package cc.persistence.dto;
 
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author Maxim Neverov
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class SubscriberDto {
 
-    // id
+    private Integer id;
     private String email;
-    private List<String> categoryCodes;
+    private String categoryCode;
 
 }
