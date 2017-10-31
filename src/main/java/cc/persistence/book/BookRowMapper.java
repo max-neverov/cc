@@ -16,8 +16,8 @@ public class BookRowMapper implements RowMapper<BookDto> {
     @Override
     public BookDto mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new BookDto(rs.getInt("id"),
-                rs.getString("title"),
-                rs.getString("category_code"));
+                           rs.getString("title"),
+                           rs.getString("category_code"));
     }
 
 }
