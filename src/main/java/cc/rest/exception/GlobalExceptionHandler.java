@@ -40,4 +40,12 @@ public class GlobalExceptionHandler {
         return new NewsletterError("News-103", HttpStatus.BAD_REQUEST.getReasonPhrase());
     }
 
+    @ExceptionHandler({NewsletterBadRequest.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public NewsletterError handle(NewsletterBadRequest e) {
+        log.error(e.getMessage(), e);
+        return new NewsletterError("News-104", e.getMessage());
+    }
+
 }
