@@ -96,4 +96,26 @@ public class BookControllerTest {
                 .andExpect(status().isInternalServerError());
     }
 
+    @Test
+    public void return400WhenAnyBookFieldMissing() throws Exception {
+        Book book = new Book();
+
+        mockMvc.perform(post(PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(book)))
+                .andExpect(status().isBadRequest());
+
+        book.setTitle("");
+        mockMvc.perform(post(PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(book)))
+                .andExpect(status().isBadRequest());
+
+        book.setTitle("title");
+        mockMvc.perform(post(PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(book)))
+                .andExpect(status().isBadRequest());
+    }
+
 }
