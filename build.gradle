@@ -26,7 +26,6 @@ repositories {
 
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-web:1.5.8.RELEASE")
-    compile("org.springframework.boot:spring-boot-starter-actuator:1.5.8.RELEASE")
     compile("org.springframework.boot:spring-boot-starter-jdbc:1.5.8.RELEASE")
     compile("org.projectlombok:lombok:1.16.18")
     compile("ch.qos.logback:logback-classic:1.2.3")
