@@ -34,7 +34,8 @@ dependencies {
     runtime("com.h2database:h2:1.4.196")
     compile("io.springfox:springfox-swagger2:2.7.0")
     compile("io.springfox:springfox-swagger-ui:2.7.0")
-
+    compile("com.netflix.hystrix:hystrix-core:1.5.12")
+    
     // mandatory dependencies for using Spock
     compile("org.codehaus.groovy:groovy-all:2.4.10")
     testCompile("org.spockframework:spock-core:1.1-groovy-2.4")
