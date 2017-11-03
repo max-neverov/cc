@@ -24,7 +24,6 @@ public class BookRepositoryImpl implements BookRepository {
     private final BookRowMapper mapper;
     public static final String BOOK_GROUP = "BookGroup";
 
-
     @Inject
     public BookRepositoryImpl(DataSource dataSource, BookRowMapper mapper) {
         jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
