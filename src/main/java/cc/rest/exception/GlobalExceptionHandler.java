@@ -33,10 +33,10 @@ public class GlobalExceptionHandler {
         return new NewsletterError("News-102", HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
     }
 
-    @ExceptionHandler({DataIntegrityViolationException.class})
+    @ExceptionHandler({DbError.class})
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public NewsletterError handleIntegrityErrors(DataIntegrityViolationException e) {
+    public NewsletterError handleIntegrityErrors(DbError e) {
         log.error(e.getMessage(), e);
         return new NewsletterError("News-103", HttpStatus.BAD_REQUEST.getReasonPhrase());
     }
