@@ -38,8 +38,6 @@ public class NewsletterServiceImpl implements NewsletterService {
 
     @Override
     public List<Newsletter> getNewsletters() {
-        List<Subscriber> subscribers = subscriberRepository.getSubscribers();
-
         return Collections.emptyList();
     }
 

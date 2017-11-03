@@ -1,6 +1,6 @@
 package cc.persistence.subscriber;
 
-import cc.common.model.Subscriber;
+import cc.persistence.dto.SubscriberDto;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import java.util.List;
  */
 public interface SubscriberRepository {
 
-    List<Subscriber> getSubscribers();
-    void saveSubscriber(Subscriber subscriber);
+    List<SubscriberDto> getSubscribers();
+    void create(List<SubscriberDto> subscriber);
 
 }
