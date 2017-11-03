@@ -1,6 +1,7 @@
 package cc.persistence.book;
 
 import cc.persistence.dto.BookDto;
+import cc.persistence.hystrix.HystrixDbCommand;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -19,14 +20,14 @@ import java.util.Map;
 @Repository
 public class BookRepositoryImpl implements BookRepository {
 
-    private final DataSource dataSource;
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final BookRowMapper mapper;
+    public static final String BOOK_GROUP = "BookGroup";
+
 
     @Inject
     public BookRepositoryImpl(DataSource dataSource, BookRowMapper mapper) {
-        this.dataSource = dataSource;
-        jdbcTemplate = new NamedParameterJdbcTemplate(this.dataSource);
+        jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
         this.mapper = mapper;
     }
 
@@ -42,16 +43,18 @@ public class BookRepositoryImpl implements BookRepository {
                                 .getValues());
         }
 
-        jdbcTemplate.batchUpdate(sql, batchValues.toArray(new Map[books.size()]));
+        HystrixDbCommand<int[]> createCmd = new HystrixDbCommand<>("CreateBook", BOOK_GROUP);
+        createCmd.execute(cmd -> jdbcTemplate.batchUpdate(sql, batchValues.toArray(new Map[books.size()])));
     }
 
     @Override
     public List<BookDto> getAllBooksBelongToCategory(String category) {
         String sql = "select * from book" +
                     " where category_code = :categoryCode";
-        
-        return jdbcTemplate.query(sql,
-                new MapSqlParameterSource("categoryCode", category), mapper);
+
+        HystrixDbCommand<List<BookDto>> getCmd = new HystrixDbCommand<>("GetBooks", BOOK_GROUP);
+        return getCmd.execute(cmd -> jdbcTemplate.query(sql,
+                new MapSqlParameterSource("categoryCode", category), mapper));
     }
 
 }
