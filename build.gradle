@@ -31,6 +31,11 @@ dependencies {
     compile("org.projectlombok:lombok:1.16.18")
     compile("ch.qos.logback:logback-classic:1.2.3")
     compile("javax.inject:javax.inject:1")
+
+    // caching dependencies
+    compile("com.github.ben-manes.caffeine:caffeine:2.5.6")
+    compile("org.springframework.boot:spring-boot-starter-cache:1.5.8.RELEASE")
+
     compile("org.liquibase:liquibase-core:3.5.3")
     runtime("com.h2database:h2:1.4.196")
 
