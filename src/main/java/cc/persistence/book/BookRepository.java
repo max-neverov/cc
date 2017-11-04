@@ -2,6 +2,7 @@ package cc.persistence.book;
 
 import cc.persistence.dto.BookDto;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -11,6 +12,6 @@ public interface BookRepository {
 
     void create(List<BookDto> books);
     List<BookDto> getBooksWithCategory(String category);
-    List<BookDto> getBooksWithCategories(List<String> categories);
+    List<BookDto> getBooksWithCategories(Collection<String> categories);
 
 }

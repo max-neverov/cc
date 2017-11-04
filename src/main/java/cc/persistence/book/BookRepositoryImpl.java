@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -57,7 +58,7 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     @Override
-    public List<BookDto> getBooksWithCategories(List<String> categories) {
+    public List<BookDto> getBooksWithCategories(Collection<String> categories) {
         String sql = "select * from book" +
                     " where category_code in (:categoryCode)";
 
