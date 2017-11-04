@@ -47,13 +47,23 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     @Override
-    public List<BookDto> getAllBooksBelongToCategory(String category) {
+    public List<BookDto> getBooksWithCategory(String category) {
         String sql = "select * from book" +
                     " where category_code = :categoryCode";
 
         HystrixDbCommand<List<BookDto>> getCmd = new HystrixDbCommand<>("GetBooks", BOOK_GROUP);
         return getCmd.execute(cmd -> jdbcTemplate.query(sql,
                 new MapSqlParameterSource("categoryCode", category), mapper));
+    }
+
+    @Override
+    public List<BookDto> getBooksWithCategories(List<String> categories) {
+        String sql = "select * from book" +
+                    " where category_code in (:categoryCode)";
+
+        HystrixDbCommand<List<BookDto>> getCmd = new HystrixDbCommand<>("GetBooksBulk", BOOK_GROUP);
+        return getCmd.execute(cmd -> jdbcTemplate.query(sql,
+                new MapSqlParameterSource("categoryCode", categories), mapper));
     }
 
 }
