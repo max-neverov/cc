@@ -15,5 +15,10 @@ public class Category {
     private String code;
     private String title;
     private String superCategoryCode;
-    
+
+    public Category(String code, String title) {
+        this.code = code;
+        this.title = title;
+    }
+
 }

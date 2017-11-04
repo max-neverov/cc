@@ -30,7 +30,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<Category> getAllCategories() {
+    public List<Category> getCategories() {
         return repository.getAllCategories().stream()
                 .map(mapper::mapToDomain)
                 .collect(Collectors.toList());

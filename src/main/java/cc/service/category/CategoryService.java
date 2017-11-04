@@ -1,8 +1,8 @@
 package cc.service.category;
 
-import java.util.List;
-
 import cc.common.model.Category;
+
+import java.util.List;
 
 /**
  * @author Maxim Neverov
@@ -10,6 +10,6 @@ import cc.common.model.Category;
 public interface CategoryService {
 
     Category create(Category category);
-    List<Category> getAllCategories();
+    List<Category> getCategories();
 
 }

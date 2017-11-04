@@ -1,17 +1,13 @@
 package cc.common.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Value;
 
 import java.util.List;
 
 /**
  * @author Maxim Neverov
  */
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Value
 public class Notification {
 
     private String book;
