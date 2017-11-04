@@ -1,5 +1,6 @@
 package cc.service.newsletter
 
+import cc.common.model.Category
 import cc.common.model.CategoryNode
 import cc.common.model.CategoryPath
 import cc.persistence.book.BookRepository
@@ -125,6 +126,34 @@ class NewsletterServiceTest extends Specification {
         desiredCats | resultSize
         []          |  0
         null        |  0
+    }
+
+    def "buildTree should return valid tree"() {
+        setup:
+        def cat1 = new Category("cat1", "title1")
+        def cat2 = new Category("cat2", "title2", "cat1")
+        def cat3 = new Category("cat3", "title3", "cat2")
+        def cat4 = new Category("cat4", "title4", "cat2")
+        def cat5 = new Category("cat5", "title5", "cat2")
+        def cat6 = new Category("cat6", "title6", "cat1")
+        def cat7 = new Category("cat7", "title7")
+        def list = [cat1, cat2, cat3, cat4, cat5, cat6, cat7]
+
+        when:
+        def result = service.buildTrees(list)
+
+        then:
+        result.size() == 2
+        def path1 = service.getAllPathsStartedBy(result.get(0))
+        path1.size() == 4
+        path1.get(0).getPath() == ["cat1", "cat2", "cat3"]
+        path1.get(1).getPath() == ["cat1", "cat2", "cat5"]
+        path1.get(2).getPath() == ["cat1", "cat2", "cat4"]
+        path1.get(3).getPath() == ["cat1", "cat6"]
+
+        def path2 = service.getAllPathsStartedBy(result.get(1))
+        path2.size() == 1
+        path2.get(0).getPath() == ["cat7"]
     }
 
     private static List<CategoryNode> getListOfCategoryTrees() {
