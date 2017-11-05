@@ -3,8 +3,8 @@ package cc.rest.exception;
 import com.netflix.hystrix.exception.HystrixRuntimeException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -33,10 +33,10 @@ public class GlobalExceptionHandler {
         return new NewsletterError("News-102", HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
     }
 
-    @ExceptionHandler({DbError.class})
+    @ExceptionHandler({DbError.class, HttpMessageConversionException.class})
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public NewsletterError handleIntegrityErrors(DbError e) {
+    public NewsletterError handleIntegrityErrors(Exception e) {
         log.error(e.getMessage(), e);
         return new NewsletterError("News-103", HttpStatus.BAD_REQUEST.getReasonPhrase());
     }
