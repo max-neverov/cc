@@ -1,4 +1,11 @@
-server:
-  port: 8080
+liquibase:
+  contexts: production
+
+---
+spring:
+  profiles: development
 
 spring.h2.console.enabled: true
+
+liquibase:
+  contexts: development

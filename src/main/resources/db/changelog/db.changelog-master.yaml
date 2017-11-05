@@ -80,3 +80,10 @@ databaseChangeLog:
             columnNames: email, category_code
             constraintName: uq_email_category
             tableName: subscriber
+  - changeSet:
+      id: 2
+      author: nmax
+      context: development
+      changes:
+        - sqlFile:
+            path: /db/changelog/insert_data.sql
