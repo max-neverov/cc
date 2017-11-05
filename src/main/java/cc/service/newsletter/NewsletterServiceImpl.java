@@ -1,11 +1,15 @@
 package cc.service.newsletter;
 
+import cc.common.model.Book;
 import cc.common.model.Category;
 import cc.common.model.CategoryNode;
 import cc.common.model.CategoryPath;
 import cc.common.model.Newsletter;
-import cc.persistence.book.BookRepository;
-import cc.persistence.subscriber.SubscriberRepository;
+import cc.common.model.Notification;
+import cc.common.model.Subscriber;
+import cc.service.book.BookService;
+import cc.service.category.CategoryService;
+import cc.service.subscriber.SubscriberService;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,12 +17,15 @@ import org.springframework.stereotype.Service;
 import javax.inject.Inject;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Deque;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -28,19 +35,102 @@ import java.util.stream.Collectors;
 @Service
 public class NewsletterServiceImpl implements NewsletterService {
 
-    private final SubscriberRepository subscriberRepository;
-    private final BookRepository bookRepository;
+    private final BookService bookService;
+    private final SubscriberService subscriberService;
+    private final CategoryService categoryService;
 
     @Inject
-    public NewsletterServiceImpl(SubscriberRepository subscriberRepository,
-                                 BookRepository bookRepository) {
-        this.subscriberRepository = subscriberRepository;
-        this.bookRepository = bookRepository;
+    public NewsletterServiceImpl(BookService bookService,
+                                 SubscriberService subscriberService,
+                                 CategoryService categoryService) {
+        this.bookService = bookService;
+        this.subscriberService = subscriberService;
+        this.categoryService = categoryService;
     }
 
     @Override
     public List<Newsletter> getNewsletters() {
-        return Collections.emptyList();
+        // get all categories to build a tree
+        List<Category> categories = categoryService.getCategories();
+        List<CategoryNode> trees = buildTrees(categories);
+
+        // get all subscribers and build their paths
+        List<Subscriber> subscribers = subscriberService.getSubscribers();
+        Map<String, List<CategoryPath>> emailToPaths = new HashMap<>();
+
+        for (Subscriber subscriber : subscribers) {
+            List<CategoryPath> pathsForSubscriber = getPathsForCategories(subscriber.getCategoryCodes(), trees);
+            emailToPaths.put(subscriber.getEmail(), pathsForSubscriber);
+        }
+
+        return getNewsletters(emailToPaths);
+    }
+
+    private List<Newsletter> getNewsletters(Map<String, List<CategoryPath>> emailToPaths) {
+        List<Newsletter> result = new ArrayList<>();
+
+        for (Map.Entry<String, List<CategoryPath>> entry : emailToPaths.entrySet()) {
+            List<CategoryPath> paths = entry.getValue();
+
+            // these categories are not the same as just a subscriber's categories: they contain all child categories as well
+            Set<String> categoryCodes = paths.stream()
+                    .map(CategoryPath::getPath)
+                    .flatMap(List::stream)
+                    .collect(Collectors.toSet());
+
+            Map<String, List<Book>> booksWithCategories = bookService.getBooksWithCategories(categoryCodes);
+
+            Map<Book, List<CategoryPath>> booksMap = getBookListMap(paths, booksWithCategories);
+            Newsletter newsletter = new Newsletter();
+            newsletter.setRecipient(entry.getKey());
+
+            List<Notification> notifications = booksMap.entrySet().stream()
+                    .map(e -> new Notification(e.getKey().getTitle(), e.getValue()))
+                    .collect(Collectors.toList());
+            newsletter.setNotifications(notifications);
+            result.add(newsletter);
+        }
+
+        return result;
+    }
+
+    // Visible for testing
+    Map<Book, List<CategoryPath>> getBookListMap(List<CategoryPath> paths, Map<String, List<Book>> booksWithCategories) {
+        Map<Book, List<CategoryPath>> result = new HashMap<>();
+        Set<String> processedCategories = new HashSet<>();
+        for (CategoryPath path : paths) {
+            List<String> pathCategories = path.getPath();
+            for (int i = 0; i < pathCategories.size(); i++) {
+                String currentCategory = pathCategories.get(i);
+                if (processedCategories.contains(currentCategory)) {
+                    continue;
+                }
+                List<Book> categoryBooks = booksWithCategories.get(currentCategory);
+                if (categoryBooks == null) {
+                    continue;
+                }
+                for (Book categoryBook : categoryBooks) {
+                    List<String> bookPath = pathCategories.subList(0, i + 1);
+                    List<CategoryPath> bookPaths = result.get(categoryBook);
+                    if (bookPaths == null) {
+                        bookPaths = new ArrayList<>();
+                        bookPaths.add(new CategoryPath(bookPath));
+                        result.put(categoryBook, bookPaths);
+                    } else {
+                        bookPaths.add(new CategoryPath(bookPath));
+                    }
+                }
+                processedCategories.add(currentCategory);
+            }
+        }
+        return result;
+    }
+
+    private List<CategoryPath> getPathsForCategories(final List<String> desiredCategories, final List<CategoryNode> trees) {
+        return trees.stream()
+                .map(it -> getPathsForCategories(desiredCategories, it))
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
     }
 
     /**

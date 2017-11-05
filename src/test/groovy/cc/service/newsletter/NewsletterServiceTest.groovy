@@ -1,12 +1,15 @@
 package cc.service.newsletter
 
+import cc.common.model.Book
 import cc.common.model.Category
 import cc.common.model.CategoryNode
 import cc.common.model.CategoryPath
 import cc.persistence.book.BookRepository
 import cc.persistence.subscriber.SubscriberRepository
-import cc.service.newsletter.NewsletterServiceImpl
-import org.mockito.*
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.MockitoAnnotations
+import org.mockito.Spy
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -156,6 +159,34 @@ class NewsletterServiceTest extends Specification {
         path2.get(0).getPath() == ["cat7"]
     }
 
+    def "getBookListMap should return books with their pahts"() {
+        setup:
+        def paths = getPaths()
+        Map<String, List<Book>> bookMap = new HashMap<>()
+        Book book3 = new Book("book3", ["cat11", "cat8"])
+        Book book5 = new Book("book5", ["cat10", "cat11"])
+        Book book6 = new Book("book6", ["cat11", "cat12"])
+        Book book4 = new Book("book4", ["cat7"])
+        bookMap.put("cat7", [book4])
+        bookMap.put("cat8", [book3])
+        bookMap.put("cat10", [book5])
+        bookMap.put("cat11", [book3, book5, book6])
+        bookMap.put("cat12", [book6])
+
+        when:
+        def resultMap = service.getBookListMap(paths, bookMap)
+
+        then:
+        resultMap.size() == 4
+        resultMap.get(book3) == [new CategoryPath(["cat7", "cat8"]),
+                                 new CategoryPath(["cat7", "cat9", "cat11"])]
+        resultMap.get(book4) == [new CategoryPath(["cat7"])]
+        resultMap.get(book5) == [new CategoryPath(["cat7", "cat8", "cat10"]),
+                                 new CategoryPath(["cat7", "cat9", "cat11"])]
+        resultMap.get(book6) == [new CategoryPath(["cat7", "cat9", "cat11"]),
+                                 new CategoryPath(["cat7", "cat9", "cat12"])]
+    }
+
     private static List<CategoryNode> getListOfCategoryTrees() {
         [getCategoryTreeFrom1To11(), getCategoryTreeFrom20To25()]
     }
@@ -230,6 +261,14 @@ class NewsletterServiceTest extends Specification {
         root.addChildCategoryNode(_22)
 
         root
+    }
+
+    private static List<CategoryPath> getPaths() {
+        def path1 = new CategoryPath(["cat7", "cat8", "cat10"])
+        def path2 = new CategoryPath(["cat7", "cat9", "cat11"])
+        def path3 = new CategoryPath(["cat7", "cat9", "cat12"])
+        def paths = [path1, path2, path3]
+        paths
     }
 
 }
