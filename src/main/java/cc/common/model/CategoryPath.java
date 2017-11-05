@@ -11,15 +11,15 @@ import java.util.List;
 @Value
 public class CategoryPath {
 
-    private final List<String> path = new ArrayList<>();
+    private final List<CategoryPathElement> path = new ArrayList<>();
 
-    public CategoryPath(List<String> path) {
+    public CategoryPath(List<CategoryPathElement> path) {
         if (path != null) {
             this.path.addAll(path);
         }
     }
 
-    public void addCategory(String category) {
+    public void addCategory(CategoryPathElement category) {
         path.add(category);
     }
 

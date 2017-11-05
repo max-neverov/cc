@@ -2,6 +2,7 @@ package cc.rest;
 
 import cc.Application;
 import cc.common.model.Book;
+import cc.rest.exception.DbError;
 import cc.service.book.BookService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
@@ -66,7 +67,7 @@ public class BookControllerTest {
     @Test
     public void return400WhenCannotInsertInDb() throws Exception {
         Book book = new Book("title", Arrays.asList("cat1", "cat2"));
-        doThrow(DuplicateKeyException.class).when(service).create(book);
+        doThrow(DbError.class).when(service).create(book);
 
         mockMvc.perform(post(PATH)
                 .contentType(MediaType.APPLICATION_JSON)

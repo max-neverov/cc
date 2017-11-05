@@ -2,6 +2,7 @@ package cc.service.newsletter;
 
 import cc.common.model.Book;
 import cc.common.model.Category;
+import cc.common.model.CategoryPathElement;
 import cc.common.model.CategoryNode;
 import cc.common.model.CategoryPath;
 import cc.common.model.Newsletter;
@@ -76,6 +77,7 @@ public class NewsletterServiceImpl implements NewsletterService {
             Set<String> categoryCodes = paths.stream()
                     .map(CategoryPath::getPath)
                     .flatMap(List::stream)
+                    .map(CategoryPathElement::getCode)
                     .collect(Collectors.toSet());
 
             Map<String, List<Book>> booksWithCategories = bookService.getBooksWithCategories(categoryCodes);
@@ -99,18 +101,18 @@ public class NewsletterServiceImpl implements NewsletterService {
         Map<Book, List<CategoryPath>> result = new HashMap<>();
         Set<String> processedCategories = new HashSet<>();
         for (CategoryPath path : paths) {
-            List<String> pathCategories = path.getPath();
+            List<CategoryPathElement> pathCategories = path.getPath();
             for (int i = 0; i < pathCategories.size(); i++) {
-                String currentCategory = pathCategories.get(i);
-                if (processedCategories.contains(currentCategory)) {
+                CategoryPathElement currentCategory = pathCategories.get(i);
+                if (processedCategories.contains(currentCategory.getCode())) {
                     continue;
                 }
-                List<Book> categoryBooks = booksWithCategories.get(currentCategory);
+                List<Book> categoryBooks = booksWithCategories.get(currentCategory.getCode());
                 if (categoryBooks == null) {
                     continue;
                 }
                 for (Book categoryBook : categoryBooks) {
-                    List<String> bookPath = pathCategories.subList(0, i + 1);
+                    List<CategoryPathElement> bookPath = pathCategories.subList(0, i + 1);
                     List<CategoryPath> bookPaths = result.get(categoryBook);
                     if (bookPaths == null) {
                         bookPaths = new ArrayList<>();
@@ -120,7 +122,7 @@ public class NewsletterServiceImpl implements NewsletterService {
                         bookPaths.add(new CategoryPath(bookPath));
                     }
                 }
-                processedCategories.add(currentCategory);
+                processedCategories.add(currentCategory.getCode());
             }
         }
         return result;
@@ -178,7 +180,7 @@ public class NewsletterServiceImpl implements NewsletterService {
     List<CategoryPath> getAllPathsStartedBy(CategoryNode root) {
         final List<CategoryPath> result = new ArrayList<>();
         final Deque<PathHolder> stack = new ArrayDeque<>();
-        List<String> prefix = null;
+        List<CategoryPathElement> prefix = null;
         while (root != null || !stack.isEmpty()) {
             if (!stack.isEmpty()) {
                 PathHolder pathHolder = stack.pop();
@@ -194,8 +196,7 @@ public class NewsletterServiceImpl implements NewsletterService {
             CategoryPath path = new CategoryPath(prefix);
             while (root != null) {
                 // add current node's category code to current path
-                String categoryCode = root.getCategoryCode();
-                path.addCategory(categoryCode);
+                path.addCategory(new CategoryPathElement(root.getCategoryCode(), root.getCategoryTitle()));
 
                 if (root.hasChildren()) {
                     // add all children except first to the stack to iterate later
@@ -252,7 +253,7 @@ public class NewsletterServiceImpl implements NewsletterService {
     @Value
     private final class PathHolder {
         private final CategoryNode node;
-        private final List<String> pathPrefix;
+        private final List<CategoryPathElement> pathPrefix;
     }
 
 }
