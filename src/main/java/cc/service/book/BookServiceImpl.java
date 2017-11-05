@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +34,9 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<Book> getBooksWithCategory(String category) {
-        return mapper.mapToDomain(repository.getBooksWithCategory(category));
+        List<Book> result = mapper.mapToDomain(repository.getBooksWithCategory(category));
+        result.sort(Comparator.comparing(Book::getTitle));
+        return result;
     }
 
     @Override
@@ -41,6 +44,13 @@ public class BookServiceImpl implements BookService {
         List<Book> books = mapper.mapToDomain(repository.getBooksWithCategories(new ArrayList<>(categoryCodes)));
 
         return getBooksByCategoryMap(books);
+    }
+
+    @Override
+    public List<Book> getBooks() {
+        List<Book> result = mapper.mapToDomain(repository.getBooks());
+        result.sort(Comparator.comparing(Book::getTitle));
+        return result;
     }
 
     // Visible for testing

@@ -5,22 +5,25 @@ import cc.rest.validation.BookValidator;
 import cc.service.book.BookService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author Maxim Neverov
  */
 @Slf4j
-@Controller
+@RestController
 @RequestMapping("/books")
 public class BookController {
 
@@ -36,8 +39,16 @@ public class BookController {
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
     public void submitBook(@Valid @RequestBody Book book) {
-        log.info("Got the book {}", book);
         service.create(book);
+    }
+
+    @GetMapping
+    public List<Book> getBooks(@RequestParam(required = false) String category) {
+        if (category != null && !category.isEmpty()) {
+            return service.getBooksWithCategory(category);
+        } else {
+            return service.getBooks();
+        }
     }
 
     @InitBinder

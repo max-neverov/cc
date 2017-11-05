@@ -14,5 +14,6 @@ public interface BookService {
     void create(Book book);
     List<Book> getBooksWithCategory(String category);
     Map<String, List<Book>> getBooksWithCategories(Collection<String> categoryCodes);
+    List<Book> getBooks();
 
 }

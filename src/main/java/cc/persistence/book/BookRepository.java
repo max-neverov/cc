@@ -13,5 +13,6 @@ public interface BookRepository {
     void create(List<BookDto> books);
     List<BookDto> getBooksWithCategory(String category);
     List<BookDto> getBooksWithCategories(Collection<String> categories);
+    List<BookDto> getBooks();
 
 }

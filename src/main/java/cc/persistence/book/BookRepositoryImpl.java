@@ -67,4 +67,13 @@ public class BookRepositoryImpl implements BookRepository {
                 new MapSqlParameterSource("categoryCode", categories), mapper));
     }
 
+    // Added limit here. In real app pagination should be implemented
+    @Override
+    public List<BookDto> getBooks() {
+        String sql = "select * from book limit 100";
+
+        HystrixDbCommand<List<BookDto>> getCmd = new HystrixDbCommand<>("GetAllBooks", BOOK_GROUP);
+        return getCmd.execute(cmd -> jdbcTemplate.query(sql, mapper));
+    }
+
 }
