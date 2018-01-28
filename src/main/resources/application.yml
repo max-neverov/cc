@@ -1,7 +1,22 @@
+spring:
+  profiles.active: production
+
+---
+
+spring:
+  profiles: production
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/cc_db
+    username: cc
+    password: cc
+    driver-class-name: org.postgresql.Driver
+
 liquibase:
   contexts: production
 
 ---
+
 spring:
   profiles: development
 
