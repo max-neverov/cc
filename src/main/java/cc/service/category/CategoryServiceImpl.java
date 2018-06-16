@@ -1,12 +1,12 @@
 package cc.service.category;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import javax.inject.Inject;
-
 import cc.common.model.Category;
 import cc.persistence.category.CategoryRepository;
 import org.springframework.stereotype.Service;
+
+import javax.inject.Inject;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Maxim Neverov
@@ -25,13 +25,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category create(Category category) {
-        repository.create(mapper.mapToDto(category));
+        repository.save(mapper.mapToDto(category));
         return category;
     }
 
     @Override
     public List<Category> getCategories() {
-        return repository.getAllCategories().stream()
+        return repository.findAll().stream()
                 .map(mapper::mapToDomain)
                 .collect(Collectors.toList());
     }
