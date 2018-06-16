@@ -17,7 +17,7 @@ public class LoggingInterceptor extends HandlerInterceptorAdapter {
     private static final String REQUEST_ID = "requestId";
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         // in real app it would be taken from HTTP header
         String requestId = UUID.randomUUID().toString();
         MDC.put(REQUEST_ID, requestId);
@@ -26,10 +26,10 @@ public class LoggingInterceptor extends HandlerInterceptorAdapter {
     }
 
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         if (request.getQueryString() != null) {
             log.info("{} {}?{}, status: {}, remoteAddress: {}", request.getMethod(), request.getRequestURI(),
-                    response.getStatus(), request.getRemoteAddr(), request.getQueryString());
+                    request.getQueryString(), response.getStatus(), request.getRemoteAddr());
         } else {
             log.info("{} {}, status: {}, remoteAddress: {}", request.getMethod(), request.getRequestURI(),
                     response.getStatus(), request.getRemoteAddr());
