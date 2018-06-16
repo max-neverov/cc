@@ -24,12 +24,12 @@ public class SubscriberServiceImpl implements SubscriberService {
 
     @Override
     public void create(Subscriber subscriber) {
-        repository.create(mapper.mapToDto(subscriber));
+        repository.save(mapper.mapToDto(subscriber));
     }
 
     @Override
     public List<Subscriber> getSubscribers() {
-        return mapper.mapToDomain(repository.getSubscribers());
+        return mapper.mapToDomain(repository.findAll());
     }
 
 }
