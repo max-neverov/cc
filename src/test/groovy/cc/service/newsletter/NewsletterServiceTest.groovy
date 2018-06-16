@@ -1,8 +1,8 @@
 package cc.service.newsletter
 
 import cc.common.model.*
-import cc.persistence.book.BookRepository
-import cc.persistence.subscriber.SubscriberRepository
+import cc.persistence.BookRepository
+import cc.persistence.SubscriberRepository
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations

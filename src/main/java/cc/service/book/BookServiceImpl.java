@@ -1,7 +1,7 @@
 package cc.service.book;
 
 import cc.common.model.Book;
-import cc.persistence.book.BookRepository;
+import cc.persistence.BookRepository;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;

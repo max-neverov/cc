@@ -1,6 +1,5 @@
 package cc.rest.exception;
 
-import com.netflix.hystrix.exception.HystrixRuntimeException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -47,14 +46,6 @@ public class GlobalExceptionHandler {
     public NewsletterError handle(NewsletterBadRequest e) {
         log.error(e.getMessage(), e);
         return new NewsletterError("News-104", e.getMessage());
-    }
-
-    @ExceptionHandler({HystrixRuntimeException.class})
-    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
-    @ResponseBody
-    public NewsletterError handle(HystrixRuntimeException e) {
-        log.error(e.getMessage());
-        return new NewsletterError("News-105", HttpStatus.SERVICE_UNAVAILABLE.getReasonPhrase());
     }
 
 }

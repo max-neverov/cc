@@ -1,4 +1,4 @@
-package cc.persistence.subscriber;
+package cc.persistence;
 
 import cc.persistence.dto.SubscriberDto;
 import org.springframework.data.jpa.repository.JpaRepository;

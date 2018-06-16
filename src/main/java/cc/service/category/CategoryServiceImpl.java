@@ -1,7 +1,7 @@
 package cc.service.category;
 
 import cc.common.model.Category;
-import cc.persistence.category.CategoryRepository;
+import cc.persistence.CategoryRepository;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;

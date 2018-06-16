@@ -1,7 +1,7 @@
 package cc.service.subscriber;
 
 import cc.common.model.Subscriber;
-import cc.persistence.subscriber.SubscriberRepository;
+import cc.persistence.SubscriberRepository;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;

@@ -1,4 +1,4 @@
-package cc.persistence.category;
+package cc.persistence;
 
 import cc.persistence.dto.CategoryDto;
 import org.springframework.data.jpa.repository.JpaRepository;

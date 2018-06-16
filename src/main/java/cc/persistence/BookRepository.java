@@ -1,4 +1,4 @@
-package cc.persistence.book;
+package cc.persistence;
 
 import cc.persistence.dto.BookDto;
 import org.springframework.data.jpa.repository.JpaRepository;
