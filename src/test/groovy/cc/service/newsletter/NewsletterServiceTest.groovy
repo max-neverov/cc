@@ -1,16 +1,11 @@
 package cc.service.newsletter
 
-import cc.common.model.Book
-import cc.common.model.Category
-import cc.common.model.CategoryPathElement
-import cc.common.model.CategoryNode
-import cc.common.model.CategoryPath
+import cc.common.model.*
 import cc.persistence.book.BookRepository
 import cc.persistence.subscriber.SubscriberRepository
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import org.mockito.Spy
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -26,7 +21,6 @@ class NewsletterServiceTest extends Specification {
     @Mock
     private BookRepository bookRepository
 
-    @Spy
     @InjectMocks
     private NewsletterServiceImpl service
 
@@ -113,7 +107,7 @@ class NewsletterServiceTest extends Specification {
         def desiredCats = ["5", "6", "not existing category"]
 
         when:
-        def paths = service.getPathsForCategories(desiredCats, root)
+        def paths = service.getPathsForCategories(desiredCats, (CategoryNode) root)
 
         then:
         paths.isEmpty()
