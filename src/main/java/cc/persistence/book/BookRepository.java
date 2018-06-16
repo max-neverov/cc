@@ -1,6 +1,7 @@
 package cc.persistence.book;
 
 import cc.persistence.dto.BookDto;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Collection;
 import java.util.List;
@@ -8,11 +9,10 @@ import java.util.List;
 /**
  * @author Maxim Neverov
  */
-public interface BookRepository {
+public interface BookRepository extends JpaRepository<BookDto, Integer> {
 
-    void create(List<BookDto> books);
-    List<BookDto> getBooksWithCategory(String category);
-    List<BookDto> getBooksWithCategories(Collection<String> categories);
-    List<BookDto> getBooks();
+    List<BookDto> findByCategoryCode(String category);
+
+    List<BookDto> findByCategoryCodeIn(Collection<String> categories);
 
 }

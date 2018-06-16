@@ -29,26 +29,26 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void create(Book book) {
-        repository.create(mapper.mapToDto(book));
+        repository.save(mapper.mapToDto(book));
     }
 
     @Override
     public List<Book> getBooksWithCategory(String category) {
-        List<Book> result = mapper.mapToDomain(repository.getBooksWithCategory(category));
+        List<Book> result = mapper.mapToDomain(repository.findByCategoryCode(category));
         result.sort(Comparator.comparing(Book::getTitle));
         return result;
     }
 
     @Override
     public Map<String, List<Book>> getBooksWithCategories(Collection<String> categoryCodes) {
-        List<Book> books = mapper.mapToDomain(repository.getBooksWithCategories(new ArrayList<>(categoryCodes)));
+        List<Book> books = mapper.mapToDomain(repository.findByCategoryCodeIn(categoryCodes));
 
         return getBooksByCategoryMap(books);
     }
 
     @Override
     public List<Book> getBooks() {
-        List<Book> result = mapper.mapToDomain(repository.getBooks());
+        List<Book> result = mapper.mapToDomain(repository.findAll());
         result.sort(Comparator.comparing(Book::getTitle));
         return result;
     }
