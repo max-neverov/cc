@@ -2,9 +2,9 @@ package cc.service.newsletter;
 
 import cc.common.model.Book;
 import cc.common.model.Category;
-import cc.common.model.CategoryPathElement;
 import cc.common.model.CategoryNode;
 import cc.common.model.CategoryPath;
+import cc.common.model.CategoryPathElement;
 import cc.common.model.Newsletter;
 import cc.common.model.Notification;
 import cc.common.model.Subscriber;
@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
@@ -218,36 +217,27 @@ public class NewsletterServiceImpl implements NewsletterService {
 
     // Visible for testing
     List<CategoryNode> buildTrees(List<Category> categories) {
-        List<Category> roots = categories.stream()
-                .filter(c -> c.getSuperCategoryCode() == null)
-                .collect(Collectors.toList());
+        Map<String, CategoryNode> catMap = categories.stream()
+                                                     .collect(Collectors.toMap(Category::getCode,
+                                                                          category -> new CategoryNode(category.getCode(), category.getTitle())));
 
-        categories.removeAll(roots);
-
-        List<CategoryNode> result = roots.stream()
-                .map(c -> new CategoryNode(c.getCode(), c.getTitle()))
-                .collect(Collectors.toList());
-
-        List<Category> categoriesAdded = new ArrayList<>();
-        List<CategoryNode> leafs = new ArrayList<>(result);
-        for (int i = 0; i < categories.size(); i++) {
-            categoriesAdded.clear();
-            for (Category category : categories) {
-                ListIterator<CategoryNode> iterator = leafs.listIterator();
-                while (iterator.hasNext()) {
-                    CategoryNode categoryNode = iterator.next();
-                    if (categoryNode.getCategoryCode().equals(category.getSuperCategoryCode())) {
-                        CategoryNode leaf = new CategoryNode(category.getCode(), category.getTitle());
-                        categoryNode.addChildCategoryNode(leaf);
-                        categoriesAdded.add(category);
-                        iterator.add(leaf);
-                    }
+        for (Category category : categories) {
+            String superCategoryCode = category.getSuperCategoryCode();
+            if (superCategoryCode != null) {
+                CategoryNode parent = catMap.get(superCategoryCode);
+                if (parent != null) {
+                    parent.addChildCategoryNode(catMap.get(category.getCode()));
                 }
             }
-            categories.removeAll(categoriesAdded);
         }
 
-        return result;
+        // filter categories without parent - roots
+        List<CategoryNode> roots = categories.stream()
+                .filter(c -> c.getSuperCategoryCode() == null)
+                .map(c -> catMap.get(c.getCode()))
+                .collect(Collectors.toList());
+
+        return roots;
     }
 
     @Value

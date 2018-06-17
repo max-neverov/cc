@@ -152,7 +152,8 @@ class NewsletterServiceTest extends Specification {
         def cat5 = new Category("cat5", "title5", "cat2")
         def cat6 = new Category("cat6", "title6", "cat1")
         def cat7 = new Category("cat7", "title7")
-        def list = [cat1, cat2, cat3, cat4, cat5, cat6, cat7]
+        def cat8 = new Category("cat8", "title8", "cat4")
+        def list = [cat8, cat1, cat2, cat3, cat4, cat5, cat6, cat7]
 
         when:
         def result = service.buildTrees(list)
@@ -163,7 +164,8 @@ class NewsletterServiceTest extends Specification {
         path1.size() == 4
         path1.get(0).getPath() == [new CategoryPathElement("cat1", "title1"), new CategoryPathElement("cat2", "title2"), new CategoryPathElement("cat3", "title3")]
         path1.get(1).getPath() == [new CategoryPathElement("cat1", "title1"), new CategoryPathElement("cat2", "title2"), new CategoryPathElement("cat5", "title5")]
-        path1.get(2).getPath() == [new CategoryPathElement("cat1", "title1"), new CategoryPathElement("cat2", "title2"), new CategoryPathElement("cat4", "title4")]
+        path1.get(2).getPath() == [new CategoryPathElement("cat1", "title1"), new CategoryPathElement("cat2", "title2"),
+                                   new CategoryPathElement("cat4", "title4"), new CategoryPathElement("cat8", "title8")]
         path1.get(3).getPath() == [new CategoryPathElement("cat1", "title1"), new CategoryPathElement("cat6", "title6")]
 
         def path2 = service.getAllPathsStartedBy(result.get(1))
